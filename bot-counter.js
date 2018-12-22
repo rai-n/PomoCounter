@@ -3,7 +3,7 @@ var PropertiesReader = require('properties-reader');
 
 // to interact with Discord
 const Discord = require('discord.js');
-
+client.login(process.env.BOT_TOKEN);
 // to write in files
 var fs = require("fs");
 // to eval expressions
