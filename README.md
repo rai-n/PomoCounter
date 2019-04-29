@@ -1,6 +1,6 @@
 # Pomodoro bot - Counter leaderboard scripted for KOA
 
-Count many things. Optimised for 25 minute study sessions. 
+Count many things.  
 
 #### Usage
 Create counters with the `!addcounter name` command.  
