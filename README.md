@@ -1,5 +1,5 @@
-# Pomodoro bot - Counter leaderboard scripted for KOA
-
+# Pomodoro bot - Counter leaderboard
+Scripted for KOA 
 Count many things.  
 
 #### Usage
