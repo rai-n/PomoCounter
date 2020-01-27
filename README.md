@@ -1,6 +1,7 @@
 # Pomodoro bot - Counter leaderboard
-Scripted for KOA 
-Count many things.  
+Discord bot made for KOA discord community.
+
+Written in Node.js and is deployed on heroku.  
 
 #### Usage
 Create counters with the `!addcounter name` command.  
