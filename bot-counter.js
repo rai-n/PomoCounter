@@ -3,40 +3,39 @@ var PropertiesReader = require('properties-reader');
 
 // to interact with Discord
 const Discord = require('discord.js');
-bot.login(process.env.token);
 // to write in files
 var fs = require("fs");
 // to eval expressions
 var math = require("mathjs");
 
-var properties;
+/*var properties;
 try {
     properties = PropertiesReader('settings.properties')
 } catch (err) {
     console.log("You need to create a settings.properties file in the application folder. See README for more informations.");
     process.exit(1);
-};
+};*/
 
 // initialize the bot
 const bot = new Discord.Client();
 
-const token = properties.get('token');
-if (!token) {
+const token = "token here" //properties.get('token');
+/*if (!token) {
     console.log("settings.properties file is missing a 'token = <your token>' line. Check README if you don't know how to get your token.");
     process.exit(1);
-};
+};*/
 
 // retrieve the ownerID from the config file
-var ownerID = properties.get('ownerID');
+var ownerID = "owner ID here" //properties.get('ownerID');
 
 // retrieve the prefix for the bot
-var prefix = properties.get('prefix');
-if (!prefix) {
+var prefix = "!" //properties.get('prefix');
+/*if (!prefix) {
     console.log("Please add setting 'prefix' to settings.properties !");
 	console.log("Using default prefix : !");
     properties.set('prefix', '!');
     prefix = "!";
-};
+};*/
 
 // the regex we will use to check if the name is valid
 var inputFilter = /^[A-Za-z0-9]+$/;
@@ -147,13 +146,8 @@ bot.on('message', message => {
             }
         } else if (isCmd("uid")) {
             message.channel.send('Your UID is : ' + message.author.id)
-
-        //dreaded getroles command here
-        } else if (isCmd("getroles")) {
-            let user = message.author;
-            message.channel.send(user.roles)
-
-
+        } else if (isCmd("isadmin")) {
+            message.channel.send(message.member.roles.some(r=>["Dev", "Admin", "ADMIN"].includes(r.name)))
         } else if (isCmd("counterhelp") || isCmd("help")) {
             message.channel.send('Command list : https://github.com/Zeptaxis/bot-counter/blob/master/README.md');
         } else if (isCmd("listcounters")) {
@@ -175,12 +169,17 @@ bot.on('message', message => {
                         } else {
                             message.channel.send("There was an error parsing your input.");
                         }
-                    } else if (content[1].startsWith('-') && (message.member.roles.some(r=>["Dev", "Admin", "ADMIN"].includes(r.name)))) {
-                        if (setValue(counterName, content[1].length == 1 ? "1" : message.content.substring(content[0].length + 2), '-', message.mentions.users) ) {
-                            message.channel.send(getTextMinus(counterName));
+                    } else if (content[1].startsWith('-')) {
+                        if(message.member.roles.some(r=>["Dev", "Admin", "ADMIN"].includes(r.name))) {
+                            if (setValue(counterName, content[1].length == 1 ? "1" : message.content.substring(content[0].length + 2), '-', message.mentions.users) ) {
+                                message.channel.send(getTextMinus(counterName));
+                            } else {
+                                message.channel.send("There was an error parsing your input.");
+                            }
                         } else {
-                            message.channel.send("There was an error parsing your input.");
+                            message.channel.send("This command is only avaliable to staff members. Please DM a Guardian for help.");                                                   
                         }
+                        
                     } else if (content[1] == 'reset') {
                         resetValue(counterName);
                         message.channel.send(getTextReset(counterName));
@@ -193,11 +192,16 @@ bot.on('message', message => {
                             }
                         }
                     } else if (content[1] == 'edit') {
-                        if (counters[counterName][content[2]]) {
-                            var newValue = message.content.substr(message.content.indexOf(content[2]) + content[2].length + 1);
-                            setCounterText(counterName, content[2], newValue);
-                            message.channel.send('Property ' + content[2] + ' has been changed.');
+                        if ((message.member.roles.some(r=>["Dev", "Admin", "ADMIN"].includes(r.name)))) {
+                            if (counters[counterName][content[2]]) {
+                                var newValue = message.content.substr(message.content.indexOf(content[2]) + content[2].length + 1);
+                                setCounterText(counterName, content[2], newValue);
+                                message.channel.send('Property ' + content[2] + ' has been changed.');
+                            }
+                        } else {
+                            message.channel.send("This command is only avaliable to staff members. Please DM a Guardian for help.");
                         }
+                        
                     } else if (content[1] == 'show') {
                         if (counters[counterName][content[2]]) {
                             message.channel.send(content[2] + ' : ' + counters[counterName][content[2]]);
